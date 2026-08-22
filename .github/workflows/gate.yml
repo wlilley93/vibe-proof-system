@@ -17,9 +17,21 @@ jobs:
           lake-package-directory: kernel
       - name: replay proofs through the independent checker
         working-directory: kernel
-        # `leanchecker` ships with the toolchain since v4.28; it re-verifies
-        # every proof term against the kernel, independent of elaboration.
-        run: lake env leanchecker Vps
+        # Re-verifies every proof term against the kernel, independent of
+        # elaboration. Toolchains ≥ v4.28 bundle `leanchecker`; older pins
+        # (like the verified v4.15.0) use the external lean4checker at the
+        # matching tag. If neither works, the job fails — the replay is the
+        # point of this workflow, not an optional extra.
+        run: |
+          if lake env leanchecker Vps 2>/dev/null; then
+            echo "bundled leanchecker: proofs replayed"
+          else
+            ver=$(sed 's|leanprover/lean4:||' lean-toolchain)
+            echo "no bundled leanchecker; using external lean4checker @ $ver"
+            git clone --depth 1 --branch "$ver" https://github.com/leanprover/lean4checker /tmp/lean4checker
+            (cd /tmp/lean4checker && lake build)
+            lake env /tmp/lean4checker/.lake/build/bin/lean4checker Vps
+          fi
       - name: gate self-test on a denying world
         working-directory: kernel
         run: |

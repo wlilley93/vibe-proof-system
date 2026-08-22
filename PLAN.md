@@ -6,10 +6,11 @@ it denies. Learnings-ledger items marked PHASE n land in their phase (see LEARNI
 
 ## Phase 0 — verify the skeleton (first session on your machine)
 
-The sandbox that authored this could not reach Lean's release hosts, so the proofs are
-written but unchecked. First action: `cd kernel && lake build` (elan will fetch the pinned
-v4.33.0 toolchain). Expect at worst minor lemma-name drift in `Proofs.lean` — the theorem
-statements and proof shapes are conservative core-Lean. Then `sh gate/install.sh`, make a
+The kernel has since been verified end-to-end on `leanprover/lean4:v4.15.0` (module order,
+adversarial rank/entrenchment controls; see record/0004.md) — the pin now matches the only
+verified toolchain. Upgrading the pin is allowed only together with a full re-verification
+on the new version, never alone. First action: `cd kernel && lake build`. Then `sh
+gate/install.sh`, make a
 commit touching `kernel/` without a record entry, and watch `[2026] VPS 2` deny it. Push to
 GitHub so `gate.yml` becomes the standing trust root. Finally: replace
 `genesisDigest` with the sha256 of the genesis text you actually sign, and commit that as
