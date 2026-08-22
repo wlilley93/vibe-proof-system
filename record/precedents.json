@@ -1,0 +1,4 @@
+{
+  "comment": "Question-hash memo table (Charter, Art. 7). Wired into the binary in Phase 2; soundness with the gate is theorem res_judicata.",
+  "precedents": []
+}

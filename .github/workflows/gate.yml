@@ -1,0 +1,31 @@
+name: gate
+# The trust root (Charter, Art. 8): rebuilds every proof and replays them
+# through the independent checker, then runs the same compiled gate a
+# pre-commit hook would. A local --no-verify cannot reach this.
+on:
+  push:
+  pull_request:
+
+jobs:
+  kernel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build kernel and check all proofs
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: kernel
+      - name: replay proofs through the independent checker
+        working-directory: kernel
+        # `leanchecker` ships with the toolchain since v4.28; it re-verifies
+        # every proof term against the kernel, independent of elaboration.
+        run: lake env leanchecker Vps
+      - name: gate self-test on a denying world
+        working-directory: kernel
+        run: |
+          printf '{ "paths_changed": ["kernel/Vps/Gate.lean"], "records_added": 0 }' > /tmp/facts.json
+          if lake exe vps validate /tmp/facts.json; then
+            echo "gate failed to deny a governed change"; exit 1
+          else
+            echo "gate denies as proven"
+          fi

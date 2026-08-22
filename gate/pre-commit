@@ -1,0 +1,20 @@
+#!/bin/sh
+# The wall. Extract facts from the staged change and ask the proved kernel.
+# This script is part of the named trusted base (Charter, Art. 8): keep it
+# dumb. It asserts facts; it decides nothing.
+# Install: gate/install.sh   Bypass note: --no-verify exists; CI re-runs
+# the identical gate and is the trust root.
+set -e
+cd "$(git rev-parse --show-toplevel)"
+mkdir -p .vps
+
+paths=$(git diff --cached --name-only \
+  | sed 's/\\/\\\\/g; s/"/\\"/g' \
+  | awk '{printf "\"%s\",", $0}' | sed 's/,$//')
+records=$(git diff --cached --name-only --diff-filter=A | grep -c '^record/' || true)
+
+printf '{ "paths_changed": [%s], "records_added": %s }\n' "$paths" "${records:-0}" > .vps/facts.json
+
+cd kernel
+lake build --quiet 2>/dev/null || { echo "vps: kernel failed to build — the gate fails closed"; exit 1; }
+exec lake exe vps validate ../.vps/facts.json

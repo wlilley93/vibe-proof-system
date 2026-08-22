@@ -1,0 +1,9 @@
+name = "vps"
+defaultTargets = ["vps"]
+
+[[lean_lib]]
+name = "Vps"
+
+[[lean_exe]]
+name = "vps"
+root = "Main"
