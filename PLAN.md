@@ -17,8 +17,11 @@ the first record entry.
 
 ## Phase 1 — richer rule language, honestly small
 
-Grow `Rule` only when a real governance need hits the closed language's limit: glob scopes
-rather than prefixes, protected-content rules (the entrenchment-clause-survives class),
+First job: retire `native_decide` from `Examples.lean` — replace `String` path scopes with
+a segment-typed path (`List PathSeg`) whose matching the proof kernel reduces cheaply, so
+the example vectors close by plain `decide` and the compiler leaves the trusted base.
+Then grow `Rule` only when a real governance need hits the closed language's limit: glob
+scopes rather than prefixes, protected-content rules (the entrenchment-clause-survives class),
 dependency fences, size ceilings as lint. Every constructor added must stay decidable over
 `Facts`, ship both example vectors, and extend the theorems where it interacts with
 entrenchment. Property-test the fact extractor (the one trusted component that can lie to

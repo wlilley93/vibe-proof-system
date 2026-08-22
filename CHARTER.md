@@ -37,7 +37,8 @@ is litigated twice.
 
 **Article 8 — The trusted base, named.** VPS claims correctness only relative to: the Lean
 toolchain and independent proof checker, the fact extractor (`gate/`), git, the CI runner,
-and the sovereign's assent digest. No instrument may assert a universal negative about the
+and the sovereign's assent digest — plus, for the example vectors in `Examples.lean` only,
+the Lean compiler (`native_decide`; a Phase 1 item retires this). No instrument may assert a universal negative about the
 system as a duty. Unfalsifiable law is unenactable: every rule ships with a passing and a
 failing example.
 

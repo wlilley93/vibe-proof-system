@@ -45,7 +45,7 @@ theorem sovereign_floor {L : List Instrument} (h : Lawful L) :
         simp only [authorityResolves] at h1
         have hd := of_decide_eq_true h1
         subst hd
-        exact Or.inl ha
+        exact Or.inl rfl
       | derived p =>
         rw [ha] at h1
         simp only [authorityResolves] at h1
@@ -53,7 +53,7 @@ theorem sovereign_floor {L : List Instrument} (h : Lawful L) :
         obtain ⟨j, hjL, hj⟩ := h1
         rw [Bool.and_eq_true] at hj
         obtain ⟨hc, hr⟩ := hj
-        exact Or.inr ⟨p, j, ha, List.mem_cons_of_mem _ hjL,
+        exact Or.inr ⟨p, j, rfl, List.mem_cons_of_mem _ hjL,
           of_decide_eq_true hc, of_decide_eq_true hr⟩
 
 /-- **Art. 5 (support).** Supersession never dangles: every supersession

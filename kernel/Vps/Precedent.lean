@@ -35,7 +35,8 @@ theorem res_judicata {table : List Precedent} {oracle : String → Verdict} {q :
   | none => rfl
   | some p =>
     have hmem : p ∈ table := List.mem_of_find?_eq_some hf
-    have hq : p.question = q := of_decide_eq_true (List.find?_some hf)
+    have hq' := List.find?_some hf
+    have hq : p.question = q := of_decide_eq_true hq'
     rw [← hq]
     exact (hs p hmem).symm
 
