@@ -13,9 +13,9 @@ namespace Vps
 /-- **Art. 4, `sovereign_floor`.** No self-made law: every instrument in a
     lawful book either carries the sovereign genesis digest, or derives
     its force from a strictly higher-ranked instrument in the same book. -/
-theorem sovereign_floor {L : List Instrument} (h : Lawful L) :
+theorem sovereign_floor {d : String} {L : List Instrument} (h : Lawful d L) :
     ∀ i, i ∈ L →
-      i.authority = .sovereign genesisDigest ∨
+      i.authority = .sovereign d ∨
       ∃ p j, i.authority = .derived p ∧ j ∈ L ∧ j.cite = p ∧ i.kind.rank < j.kind.rank := by
   induction h with
   | genesis =>
@@ -40,7 +40,7 @@ theorem sovereign_floor {L : List Instrument} (h : Lawful L) :
       rw [Bool.and_eq_true] at hauth'
       obtain ⟨h1, _⟩ := hauth'
       cases ha : x.authority with
-      | sovereign d =>
+      | sovereign x =>
         rw [ha] at h1
         simp only [authorityResolves] at h1
         have hd := of_decide_eq_true h1
@@ -58,7 +58,7 @@ theorem sovereign_floor {L : List Instrument} (h : Lawful L) :
 
 /-- **Art. 5 (support).** Supersession never dangles: every supersession
     target in a lawful book exists in that book. -/
-theorem supersession_grounded {L : List Instrument} (h : Lawful L) :
+theorem supersession_grounded {d : String} {L : List Instrument} (h : Lawful d L) :
     ∀ i, i ∈ L → ∀ c, i.supersedes = some c → ∃ t, t ∈ L ∧ t.cite = c := by
   induction h with
   | genesis =>
@@ -92,7 +92,7 @@ theorem supersession_grounded {L : List Instrument} (h : Lawful L) :
     instruments in a lawful book sharing a citation are the same
     instrument. In v2 this was a runtime collision check; here it is a
     property of every book that can exist. -/
-theorem citation_unique {L : List Instrument} (h : Lawful L) :
+theorem citation_unique {d : String} {L : List Instrument} (h : Lawful d L) :
     ∀ i, i ∈ L → ∀ j, j ∈ L → i.cite = j.cite → i = j := by
   induction h with
   | genesis =>
@@ -127,7 +127,7 @@ theorem citation_unique {L : List Instrument} (h : Lawful L) :
     equal or higher rank: in any lawful book, whatever an instrument
     supersedes is of equal or lower rank. A County ruling cannot repeal
     a statute. -/
-theorem supersession_respects_rank {L : List Instrument} (h : Lawful L) :
+theorem supersession_respects_rank {d : String} {L : List Instrument} (h : Lawful d L) :
     ∀ j, j ∈ L → ∀ c, j.supersedes = some c →
     ∀ t, t ∈ L → t.cite = c → t.kind.rank ≤ j.kind.rank := by
   induction h with
@@ -169,7 +169,7 @@ theorem supersession_respects_rank {L : List Instrument} (h : Lawful L) :
         exact absurd (hwc.trans htc.symm) hne
       | inr htL =>
         -- citation uniqueness on the grown book identifies t with the witness
-        have hlaw : Lawful (j :: L) := Lawful.enact hL hauth hfresh
+        have hlaw : Lawful d (j :: L) := Lawful.enact hL hauth hfresh
         have hte : t = w :=
           citation_unique hlaw t (List.mem_cons_of_mem _ htL) w
             (List.mem_cons_of_mem _ hwL) (htc.trans hwc.symm)
@@ -190,7 +190,7 @@ theorem supersession_respects_rank {L : List Instrument} (h : Lawful L) :
     supersedes an entrenched instrument's citation. In v2 this took an
     entrenchment clause, a raw-byte invariant, and a digest-pinned lock;
     here it is a consequence of the only door law can enter through. -/
-theorem entrenched_immune {L : List Instrument} (h : Lawful L) :
+theorem entrenched_immune {d : String} {L : List Instrument} (h : Lawful d L) :
     ∀ e, e ∈ L → e.entrenched = true →
     ∀ j, j ∈ L → j.supersedes ≠ some e.cite := by
   induction h with
@@ -248,7 +248,7 @@ theorem entrenched_immune {L : List Instrument} (h : Lawful L) :
 
 /-- **Art. 5, `entrenched_effective`.** Entrenched law is always in force:
     it survives every possible future of the book. -/
-theorem entrenched_effective {L : List Instrument} (h : Lawful L) :
+theorem entrenched_effective {d : String} {L : List Instrument} (h : Lawful d L) :
     ∀ e, e ∈ L → e.entrenched = true → effectiveB L e = true := by
   intro e he hent
   unfold effectiveB
@@ -271,8 +271,8 @@ theorem every_deny_names_its_law {L : List Instrument} {f : Facts} {cs : List Ci
 /-- **Art. 5, `entrenched_bites`.** In any lawful book, an entrenched
     instrument that a change violates produces a denial citing it. No
     lawful growth of the book can ever silence entrenched law. -/
-theorem entrenched_bites {L : List Instrument} {f : Facts} {e : Instrument}
-    (h : Lawful L) (he : e ∈ L) (hent : e.entrenched = true)
+theorem entrenched_bites {d : String} {L : List Instrument} {f : Facts} {e : Instrument}
+    (h : Lawful d L) (he : e ∈ L) (hent : e.entrenched = true)
     (hv : violated f e = true) :
     ∃ cs, decideVerdict L f = .deny cs ∧ e.cite ∈ cs := by
   have heff := entrenched_effective h e he hent

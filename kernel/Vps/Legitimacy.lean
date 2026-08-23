@@ -13,8 +13,8 @@ namespace Vps
     instrument of kind `k`? Sovereign authority must carry the genesis
     digest; derived authority must name a parent in the book that
     strictly outranks the child. -/
-def authorityResolves (L : List Instrument) (k : Kind) : Authority → Bool
-  | .sovereign d => decide (d = genesisDigest)
+def authorityResolves (d : String) (L : List Instrument) (k : Kind) : Authority → Bool
+  | .sovereign x => decide (x = d)
   | .derived p => L.any fun j => decide (j.cite = p) && decide (k.rank < j.kind.rank)
 
 /-- Is the supersession target lawful for a superseder of kind `k`?
@@ -29,8 +29,8 @@ def supersessionLawful (L : List Instrument) (k : Kind) : Option Citation → Bo
       (L.all fun t => !(decide (t.cite = c) && t.entrenched))
 
 /-- The full enactment check. -/
-def authorised (L : List Instrument) (i : Instrument) : Bool :=
-  authorityResolves L i.kind i.authority && supersessionLawful L i.kind i.supersedes
+def authorised (d : String) (L : List Instrument) (i : Instrument) : Bool :=
+  authorityResolves d L i.kind i.authority && supersessionLawful L i.kind i.supersedes
 
 /-- The citation is unallocated in the book. -/
 def fresh (L : List Instrument) (i : Instrument) : Bool :=
@@ -39,9 +39,9 @@ def fresh (L : List Instrument) (i : Instrument) : Bool :=
 /-- A lawful statute book. This inductive is the constitution's operative
     core: a book is lawful iff it is the genesis book, or a lawful book
     plus one authorised, fresh enactment. Nothing is ever removed. -/
-inductive Lawful : List Instrument → Prop where
-  | genesis : Lawful [genesisInstrument]
+inductive Lawful (d : String) : List Instrument → Prop where
+  | genesis : Lawful d [genesisInstrument d]
   | enact {L : List Instrument} {i : Instrument} :
-      Lawful L → authorised L i = true → fresh L i = true → Lawful (i :: L)
+      Lawful d L → authorised d L i = true → fresh L i = true → Lawful d (i :: L)
 
 end Vps

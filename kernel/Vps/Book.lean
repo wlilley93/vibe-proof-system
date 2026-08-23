@@ -46,14 +46,22 @@ def actRecordDiscipline : Instrument :=
   , supersedes := none
   , authority := .derived ⟨2026, 1⟩ }
 
+/-- **This jurisdiction's sovereign digest.** The engine is parameterised by it (see
+    `Genesis.lean`); a jurisdiction names its own here, once, and every theorem below is
+    then about THIS book under THIS genesis and no other. Replace with the sha256 of the
+    signed genesis text at first real enactment, and thereafter only by an Article 10
+    amendment — which by construction forces every proof in the kernel to be re-established
+    before the amended system will build. -/
+def digest : String := "sha256:GENESIS-PLACEHOLDER-PIN-ME"
+
 /-- The book, newest first. -/
 def theBook : List Instrument :=
-  [actRecordDiscipline, actGateIntegrity, actKernelProtection, genesisInstrument]
+  [actRecordDiscipline, actGateIntegrity, actKernelProtection, genesisInstrument digest]
 
 /-- **The book's legitimacy is a compile-time theorem.** An unlawful book
     does not build: this term IS the system verifying its own integrity,
     once, structurally, instead of forever, operationally. -/
-theorem book_lawful : Lawful theBook :=
+theorem book_lawful : Lawful digest theBook :=
   Lawful.enact
     (Lawful.enact
       (Lawful.enact
