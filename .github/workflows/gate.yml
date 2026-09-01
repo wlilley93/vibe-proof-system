@@ -18,9 +18,8 @@ jobs:
       - name: replay proofs through the independent checker
         working-directory: kernel
         # Re-verifies every proof term against the kernel, independent of
-        # elaboration. Toolchains ≥ v4.28 bundle `leanchecker`; older pins
-        # (like the verified v4.15.0) use the external lean4checker at the
-        # matching tag. If neither works, the job fails — the replay is the
+        # elaboration. Toolchains ≥ v4.28 bundle `leanchecker`; older pins use
+        # the external lean4checker at the matching tag. If neither works, the job fails — the replay is the
         # point of this workflow, not an optional extra.
         run: |
           if lake env leanchecker Vps 2>/dev/null; then

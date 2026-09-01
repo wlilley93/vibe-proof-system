@@ -6,10 +6,10 @@ it denies. Learnings-ledger items marked PHASE n land in their phase (see LEARNI
 
 ## Phase 0 — verify the skeleton (first session on your machine)
 
-The kernel has since been verified end-to-end on `leanprover/lean4:v4.15.0` (module order,
-adversarial rank/entrenchment controls; see record/0004.md) — the pin now matches the only
-verified toolchain. Upgrading the pin is allowed only together with a full re-verification
-on the new version, never alone. First action: `cd kernel && lake build`. Then `sh
+The original end-to-end verification ran on `leanprover/lean4:v4.15.0` (module order,
+adversarial rank/entrenchment controls; see record/0004.md). The current tree has been
+rebuilt and replayed on `leanprover/lean4:v4.33.1`; the pin moves only together with a full
+re-verification on the new version, never alone. First action: `cd kernel && lake build`. Then `sh
 gate/install.sh`, make a
 commit touching `kernel/` without a record entry, and watch `[2026] VPS 2` deny it. Push to
 GitHub so `gate.yml` becomes the standing trust root. Finally: replace

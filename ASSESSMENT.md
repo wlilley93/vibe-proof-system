@@ -80,8 +80,8 @@ mitigating them:
 - **"Flawless kernel", stated honestly.** Lean compiles to native code, so the *proved
   artifact is the running gate* — no model/implementation gap. Proofs are replayed by an
   independent checker (`lean4checker`; Lean's own metatheory is mechanized in Lean4Lean).
-  Pinned to the toolchain the kernel was verified on (v4.15.0 — see record/0004.md); the
-  pin moves only together with full re-verification. What remains trusted is
+  Re-verified on the current pin (v4.33.1; the original v4.15.0 verification remains in
+  record/0004.md); the pin moves only together with full re-verification. What remains trusted is
   enumerated, finite, and named in the Charter: the Lean toolchain and checker, the fact
   extractor, the CI runner, git, and the sovereign key. No universal negatives are claimed —
   that lesson is now Charter law: *unfalsifiable law is unenactable*.
