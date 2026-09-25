@@ -22,11 +22,10 @@ def authorityResolves (d : String) (L : List Instrument) (k : Kind) : Authority 
     at a rank the superseder can reach (equal or lower — a ruling cannot
     repeal a statute), and that no instrument bearing that citation is
     entrenched (Charter, Art. 5). -/
-def supersessionLawful (L : List Instrument) (k : Kind) : Option Citation → Bool
-  | none => true
-  | some c =>
-      (L.any fun t => decide (t.cite = c) && decide (t.kind.rank ≤ k.rank)) &&
-      (L.all fun t => !(decide (t.cite = c) && t.entrenched))
+def supersessionLawful (L : List Instrument) (k : Kind) (cs : List Citation) : Bool :=
+  cs.all fun c =>
+    (L.any fun t => decide (t.cite = c) && decide (t.kind.rank ≤ k.rank)) &&
+    (L.all fun t => !(decide (t.cite = c) && t.entrenched))
 
 /-- The full enactment check. -/
 def authorised (d : String) (L : List Instrument) (i : Instrument) : Bool :=

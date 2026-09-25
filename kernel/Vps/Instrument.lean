@@ -27,13 +27,14 @@ deriving DecidableEq, Repr
 
 /-- An instrument of law. `entrenched` instruments cannot be superseded
     (theorem `entrenched_immune`). `supersedes` is the only mechanism of
-    change: the book is append-only (Charter, Art. 5). -/
+    change: the book is append-only (Charter, Art. 5). It is a LIST so that one
+    consolidation instrument can retire many determinations in a single enactment. -/
 structure Instrument where
   cite : Citation
   kind : Kind
   rule : Rule
   entrenched : Bool
-  supersedes : Option Citation
+  supersedes : List Citation
   authority : Authority
 deriving DecidableEq, Repr
 

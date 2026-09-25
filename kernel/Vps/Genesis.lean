@@ -24,7 +24,7 @@ def genesisInstrument (d : String) : Instrument :=
   , kind := .charter
   , rule := .free
   , entrenched := true
-  , supersedes := none
+  , supersedes := []
   , authority := .sovereign d }
 
 end Vps

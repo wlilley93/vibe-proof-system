@@ -25,7 +25,7 @@ example : ∀ i, i ∈ bookA →
     enactment term cannot be built at all. -/
 def forgery : Instrument :=
   { cite := ⟨2026, 2⟩, kind := .statute, rule := .free
-  , entrenched := false, supersedes := none, authority := .sovereign alpha }
+  , entrenched := false, supersedes := [], authority := .sovereign alpha }
 
 example : authorised beta bookB forgery = false := by decide
 

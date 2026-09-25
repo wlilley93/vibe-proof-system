@@ -23,7 +23,7 @@ def violated (f : Facts) (i : Instrument) : Bool :=
 
 /-- Only effective (unsuperseded) instruments bite. -/
 def effectiveB (L : List Instrument) (i : Instrument) : Bool :=
-  L.all fun j => decide (j.supersedes ≠ some i.cite)
+  L.all fun j => decide (i.cite ∉ j.supersedes)
 
 /-- The gate. Filters the book down to effective, violated instruments;
     allows iff that list is empty, otherwise denies citing every one. -/

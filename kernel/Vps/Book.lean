@@ -21,7 +21,7 @@ def actKernelProtection : Instrument :=
   , kind := .statute
   , rule := .recordRequired "kernel/"
   , entrenched := true
-  , supersedes := none
+  , supersedes := []
   , authority := .derived ⟨2026, 1⟩ }
 
 /-- `[2026] VPS 3` — Gate Integrity Act. The gate's hook scripts are not
@@ -33,7 +33,7 @@ def actGateIntegrity : Instrument :=
   , kind := .statute
   , rule := .pathForbidden "gate/"
   , entrenched := false
-  , supersedes := none
+  , supersedes := []
   , authority := .derived ⟨2026, 1⟩ }
 
 /-- `[2026] VPS 4` — Record Discipline Act. Changes to the law's prose
@@ -43,7 +43,7 @@ def actRecordDiscipline : Instrument :=
   , kind := .statute
   , rule := .recordRequired "law/"
   , entrenched := false
-  , supersedes := none
+  , supersedes := []
   , authority := .derived ⟨2026, 1⟩ }
 
 /-- **This jurisdiction's sovereign digest.** The engine is parameterised by it (see
